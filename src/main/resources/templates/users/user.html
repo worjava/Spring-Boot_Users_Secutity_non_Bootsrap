@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>человек</title>
+</head>
+
+<body>
+<h4>Данные пользователя</h4>
+<table>
+    <tr>
+        <th>Имя</th>
+        <td th:text="${user.getName()}">VALUE</td>
+    </tr>
+    <tr>
+        <th>Идентификатор</th>
+        <td th:text="${user.getId()}">VALUE</td>
+    </tr>
+    <tr>
+        <th>Возраст</th>
+        <td th:text="${user.getAge()}">VALUE</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td th:text="${user.getEmail()}">VALUE</td>
+    </tr>
+    <tr>
+        <th>Пароль</th>
+        <td th:text="${user.getPassword()}">VALUE</td>
+    </tr>
+
+    <tr>
+        <th>Пользователь</th>
+        <td th:each="role : ${user.roles}" th:text="${role.name} + '; '"></td>
+    </tr>
+
+</table>
+<form th:action="@{/logout}" th:method="post">
+    <input type="submit" value="Logout">
+</form>
+
+
+<!-- создает форму для отправки запроса на удаление персоны с указанным идентификатором -->
+
+</form>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи </title>
+
+</head>
+<body>
+
+<h4> Все пользователи  </h4>
+
+
+
+<div th:each="user: ${users}">
+    <!--ссылка на метод show user-->
+    <a th:href="@{/{id}(id=${user.getId()})}"
+       th:text="${user.getName() + '  '
+       + user.getAge() + '  '
+       + user.getEmail()+ '  '
+       + user.getPassword() }">user</a>
+
+    <!-- ${...} - получаем значения сущности-->
+    <th:block th:each="role : ${user.getRoles()}">
+       <!-- th:text прявазка значения к текстовому содержимому-->
+        <span th:text="${role.name}">ROlE </span>
+
+    </th:block>
+
+
+</div>
+
+<a href="/new">Создать нового пользователя</a>
+<form th:action="@{/logout}" th:method="post">
+    <input type="submit" value="Logout">
+</form>
+</body>
+</html>
