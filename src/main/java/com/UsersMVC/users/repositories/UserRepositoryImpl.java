@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 
+
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     @PersistenceContext

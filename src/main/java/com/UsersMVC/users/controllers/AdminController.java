@@ -17,13 +17,13 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/")
 
-public class UserController {
+public class AdminController {
 
     private final UserServiceImpl userServiceImp;
 
     public final RoleRepository roleRepository;
 
-    public UserController(UserServiceImpl userRepository, RoleRepository roleRepository) {
+    public AdminController(UserServiceImpl userRepository, RoleRepository roleRepository) {
         this.userServiceImp = userRepository;
         this.roleRepository = roleRepository;
     }
@@ -62,7 +62,6 @@ public class UserController {
     }
 
     @GetMapping("/{id}/edit")
-
     public String edit( Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userServiceImp.show(id));
         model.addAttribute("roles", roleRepository.findAll());
@@ -70,10 +69,11 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@RequestBody @Valid User user, BindingResult bindingResult,
+    public String update(@ModelAttribute @Valid User user, BindingResult bindingResult,
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors())
             return "users/edit";
+        user.setId(id);
         userServiceImp.update(id, user);  // обновляем человека в базе даных который пришел на вход
         return "redirect:/";
     }
@@ -84,11 +84,6 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/user")
-    public String show(Model model, Principal principal) {
-        model.addAttribute("user", userServiceImp.findByUsername(principal.getName()));
-        return "users/user";
-    }
 
 }
 

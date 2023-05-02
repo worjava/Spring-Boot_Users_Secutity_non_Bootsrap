@@ -16,11 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService , UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository peopleRepository;
 
     public UserServiceImpl(UserRepository peopleRepository) {
@@ -62,13 +63,14 @@ public class UserServiceImpl implements UserService , UserDetailsService {
 
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = peopleRepository.findByUsername(username);
+      Optional<User> user = Optional.ofNullable(peopleRepository.findByUsername(username));
         if (user == null) {
             throw new UsernameNotFoundException(String.format("user name not find " + username));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                authoritiesAllRoles(user.getRoles()));
-    }
+        return user.get();
+    };
+
+
 
     private Collection<? extends GrantedAuthority> authoritiesAllRoles(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
