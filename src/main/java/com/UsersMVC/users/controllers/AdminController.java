@@ -3,6 +3,7 @@ package com.UsersMVC.users.controllers;
 
 import com.UsersMVC.users.models.User;
 import com.UsersMVC.users.repositories.RoleRepository;
+import com.UsersMVC.users.services.RoleService;
 import com.UsersMVC.users.services.UserServiceImpl;
 
 import org.springframework.stereotype.Controller;
@@ -11,21 +12,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 
 @Controller
-@RequestMapping("/")
-
+@RequestMapping("/admin")
 public class AdminController {
 
     private final UserServiceImpl userServiceImp;
+    public final RoleService roleService;
 
-    public final RoleRepository roleRepository;
-
-    public AdminController(UserServiceImpl userRepository, RoleRepository roleRepository) {
-        this.userServiceImp = userRepository;
-        this.roleRepository = roleRepository;
+    public AdminController(UserServiceImpl userService, RoleService roleService) {
+        this.userServiceImp = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping
@@ -39,7 +37,7 @@ public class AdminController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") String id, Model model) {
         if (id.equals("favicon.ico")) {
-            return "redirect:/";
+            return "redirect:/admin";
         }
         model.addAttribute("user", userServiceImp.show(Integer.parseInt(id)));
         return "users/show";
@@ -48,7 +46,7 @@ public class AdminController {
     @GetMapping("/new")
     public String newPerson(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("roles", roleService.findAll());
         return "users/new";
     }
 
@@ -58,13 +56,13 @@ public class AdminController {
         if (bindingResult.hasErrors())
             return "users/new";
         userServiceImp.save(person);
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit( Model model, @PathVariable("id") int id) {
+    public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userServiceImp.show(id));
-        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("roles", roleService.findAll());
         return "users/edit";
     }
 
@@ -75,13 +73,13 @@ public class AdminController {
             return "users/edit";
         user.setId(id);
         userServiceImp.update(id, user);  // обновляем человека в базе даных который пришел на вход
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @DeleteMapping("{id}")
     public String delete(@PathVariable("id") int id) {
         userServiceImp.delete(id);
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
 

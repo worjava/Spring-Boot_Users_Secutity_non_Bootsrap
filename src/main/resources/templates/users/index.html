@@ -13,7 +13,7 @@
 
 <div th:each="user: ${users}">
     <!--ссылка на метод show user-->
-    <a th:href="@{/{id}(id=${user.getId()})}"
+    <a th:href="@{admin/{id}(id=${user.getId()})}"
        th:text="${user.getName() + '  '
        + user.getAge() + '  '
        + user.getEmail()+ '  '
@@ -29,7 +29,7 @@
 
 </div>
 
-<a href="/new">Создать нового пользователя</a>
+<a href="admin/new">Создать нового пользователя</a>
 <form th:action="@{/logout}" th:method="post">
     <input type="submit" value="Logout">
 </form>
